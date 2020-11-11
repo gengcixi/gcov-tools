@@ -1,0 +1,60 @@
+#!/bin/bash
+#
+# lcov_kenrel
+# Candle Sun <candle.sun@unisoc.com>
+# 
+# This script file is a wrapper for lcov toolchain to generate html
+# report for linux kernel code coverge. Coverage data from gcc and
+# clang are both supported, with --gcov-tool help.
+# 
+# Usage: lcov_kernel <gcov-tool> [gcov-data-path]
+# gcov-tool can be found in evnironment, or with absolute path,
+# such as llvm-cov or aarch64-linux-gnu-gcov.
+# gcov-data-path can be omitted, then current dir will be used.
+
+
+if [[ $# -lt 1 ]]; then
+    cat <<EOF
+Usage: lcov_kernel <gcov-tool> [gcov-data-path]
+- gcov-tool can be found in evnironment, or with absolute path.
+- gcov-data-path can be omitted, then current dir will be used.
+EOF
+    exit 1
+fi
+
+GCOV_TOOL=$(which $1)
+
+if [[ -z $GCOV_TOOL ]]; then
+    echo "gcov tool provided can't be found, please check it!!!"
+    exit 1
+fi
+
+GCOV_PATH=${2:-.}
+OUT_TMP_SCRIPT=".tmp_lcov"
+OUT_LCOV_TRACE_FULL="lcov_kernel_coverage_full.info"
+OUT_LCOV_TRACE="lcov_kernel_coverage.info"
+OUT_RESULT_FULL="coverage_result_full"
+OUT_RESULT="coverage_result"
+
+LCOV_BRANCH_ARGS="--rc lcov_branch_coverage=1"
+GENHTML_BRANCH_ARGS="--branch-coverage"
+
+if [[ "$GCOV_TOOL" = *"llvm-cov" ]]; then
+    cat << EOF > $OUT_TMP_SCRIPT
+#!/bin/bash
+$GCOV_TOOL gcov "\$@"
+EOF
+    chmod a+x $OUT_TMP_SCRIPT
+    GCOV_TOOL=$(readlink -f $OUT_TMP_SCRIPT)
+fi
+
+rm -fv $OUT_LCOV_TRACE*
+lcov ${LCOV_BRANCH_ARGS} -c -d $GCOV_PATH --gcov-tool "$GCOV_TOOL" -o $OUT_LCOV_TRACE_FULL
+lcov ${LCOV_BRANCH_ARGS} --remove $OUT_LCOV_TRACE_FULL '*include/*' '*arch/arm64/include*' -o $OUT_LCOV_TRACE
+
+
+rm -rvf $OUT_RESULT*
+genhtml ${GENHTML_BRANCH_ARGS} -o $OUT_RESULT_FULL $OUT_LCOV_TRACE_FULL
+genhtml ${GENHTML_BRANCH_ARGS} -o $OUT_RESULT $OUT_LCOV_TRACE
+
+#rm -f $OUT_TMP_SCRIPT

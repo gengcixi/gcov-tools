@@ -1,0 +1,11 @@
+Package: lcov-kernel
+Version: 1.0.1
+Architecture: amd64
+Maintainer: Cixi Geng <cixi.geng1@unisoc.com>
+Installed-Size: 114
+Depends: libc6 (>= 2.4)
+Section: utils
+Priority: optional
+Homepage: http://asicwiki.spreadtrum.com/kernel/wiki/People/CixiGeng
+Description: generate gcov html for line,function and branch info.
+  gemerate gcov with html format data.

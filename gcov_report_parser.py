@@ -57,6 +57,8 @@ def GenerateJsonResult(coverage_result_dir, coverage_json_file):
             "Line_coverNumLo": "348 / 837",
             "Functions_coverPreLo": "40.8 %",
             "Functions_coverNumLo": "31 / 76",
+            "Branches_coverPreLo": "59.1 %",
+            "Branches_coverNumLo": "13 / 22",
             "module_type": "drivers",
             "report_index": "coverage_result/drivers/nvmem/index.html"
         },
@@ -98,6 +100,8 @@ def _AnalyzeCoverageData(index_html, module_type):
                 <td class="coverNumLo">348 / 837</td>
                 <td class="coverPerLo">40.8 %</td>
                 <td class="coverNumLo">31 / 76</td>
+                <td class="coverPerLo">59.1 %</td>
+                <td class="coverNumLo">13 / 22</td>
             </tr>
         </table>
         </center>
@@ -130,8 +134,12 @@ def _AnalyzeCoverageData(index_html, module_type):
                     data_list.append(c_td.string.replace(u'\xa0', u' '))
 
             class_list = [
-                'Line_coverPreLo', 'Line_coverNumLo', 'Functions_coverPreLo',
-                'Functions_coverNumLo'
+                'Line_coverPreLo',
+                'Line_coverNumLo',
+                'Functions_coverPreLo',
+                'Functions_coverNumLo',
+                'Branches_coverPreLo',
+                'Branches_coverNumLo'
             ]
 
             module_cov_data = dict(zip(class_list, data_list))

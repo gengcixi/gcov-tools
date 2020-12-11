@@ -9,15 +9,15 @@
 GCOV_BIN="$PWD/fakeroot/usr/bin"
 
 SET_PARA1="export GCOV_BIN=\"${GCOV_BIN}\""
-grep "$SET_PARA1" ~/.bashrc && sed -i "/export GCOV_BIN=/d" ~/.bashrc
-echo $SET_PARA1 >> ~/.bashrc
+grep "$SET_PARA1" ${HOME}/.bashrc && sed -i "/export GCOV_BIN=/d" ${HOME}/.bashrc
+echo $SET_PARA1 >> ${HOME}/.bashrc
 
 SET_PARA2="export PATH=\${GCOV_BIN}:\$PATH"
-grep "$SET_PARA2" ~/.bashrc && sed -i "/export PATH=\${GCOV_BIN}/d" ~/.bashrc
-echo $SET_PARA2 >> ~/.bashrc
+grep "$SET_PARA2" ${HOME}/.bashrc && sed -i "/export PATH=\${GCOV_BIN}/d" ${HOME}/.bashrc
+echo $SET_PARA2 >> ${HOME}/.bashrc
 
-source ~/.bashrc
-cp lcovrc ~/.lcovrc
+source ${HOME}/.bashrc
+cp lcovrc ${HOME}/.lcovrc
 
 generate_deb_package()
 {
